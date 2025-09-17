@@ -6,7 +6,7 @@ set -eu
 V_SDK=5.1.0-Release
 
 # OpenSSL
-V_OPENSSL=openssl-3.5.2
+V_OPENSSL=OpenSSL_1_1_1w
 
 # Telegram Database library 1.8.54
 V_TDLIB=6dca40bdaac8b5e66c7a793727bf3f81e9711f70
