@@ -18,8 +18,5 @@ rm -rf windows
 
 # Extract NDK
 cd linux
-for i in *.zip
-do
-  unzip -q $i
-  rm $i
-done
+unzip -q native*.zip
+rm *.zip

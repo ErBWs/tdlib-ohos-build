@@ -2,7 +2,7 @@
 
 set -eu
 
-. ./download/deps-version.sh
+. ./download/post-download.sh
 
 pushd $HOME/tdlib/openssl
 
@@ -17,6 +17,8 @@ fi
 
 mkdir -p .build
 cd .build
+
+setup_build_env
 
 ../Configure linux-aarch64 no-shared no-tests --prefix=$DEST/openssl
 make -j$CORES
