@@ -6,39 +6,34 @@ set -eu
 
 pushd $HOME/tdlib/td
 
-if [ "$1" == "generate" ]; then       # Generate TDLib source files
-  unset_build_env
-  mkdir -p .build-native
-  cd .build-native
-  cmake -DTD_GENERATE_SOURCE_FILES=ON ..
-  cmake --build .
-  cd ..
-elif [ "$1" == "build" ]; then        # Build TDLib
-  setup_build_env
-  mkdir -p .build-arm64
-  cd .build-arm64
-  cmake -L \
-    -DCMAKE_TOOLCHAIN_FILE=$OHOS_NDK_HOME/native/build/cmake/ohos.toolchain.cmake \
-    -DCMAKE_SKIP_RPATH=TRUE \
-    -DOPENSSL_ROOT_DIR=$DEST/openssl \
-    -DOPENSSL_CRYPTO_LIBRARY=$DEST/openssl/lib/libcrypto.a \
-    -DOPENSSL_SSL_LIBRARY=$DEST/openssl/lib/libssl.a \
-    -DOHOS_STL=c++_static \
-    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-    -GNinja \
-    ..
-  cmake --build . --target tdjson
-elif [ "$1" == "clean-generate" ]; then
-	rm -rf .build-native
-else
-elif [ "$1" == "clean-build" ]; then
-	rm -rf .build-arm64
-else
+if [ "$1" == "build" ]; then
+  true
 elif [ "$1" == "clean" ]; then
-	rm -rf .build-native
-	rm -rf .build-arm64
+	rm -rf .build
 else
 	exit 1
 fi
+
+mkdir -p .build
+cd .build
+
+cmake -L \
+  -DCMAKE_TOOLCHAIN_FILE=$OHOS_NDK_HOME/native/build/cmake/ohos.toolchain.cmake \
+  -DCMAKE_SKIP_RPATH=TRUE \
+  -DOPENSSL_ROOT_DIR=$DEST/openssl \
+  -DOPENSSL_INCLUDE_DIR=$DEST/openssl/include \
+  -DOPENSSL_CRYPTO_LIBRARY=$DEST/openssl/lib/libcrypto.a \
+  -DOPENSSL_SSL_LIBRARY=$DEST/openssl/lib/libssl.a \
+  -DOHOS_STL=c++_static \
+  -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+  -GNinja \
+  ..
+cmake --build . --target tdjson
+
+rm libtdjson.so
+$STRIP --strip-debug --strip-unneeded libtdjson.so.* -o  libtdjson.so
+
+mkdir -p $DEST/tdlib
+cp -p libtdjson.so $DEST/tdlib
 
 popd

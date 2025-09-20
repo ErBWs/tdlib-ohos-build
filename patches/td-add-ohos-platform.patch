@@ -1,0 +1,39 @@
+diff --git a/tdutils/td/utils/port/config.h b/tdutils/td/utils/port/config.h
+index 02675d389..300347f97 100644
+--- a/tdutils/td/utils/port/config.h
++++ b/tdutils/td/utils/port/config.h
+@@ -16,7 +16,7 @@
+   #define TD_PORT_POSIX 1
+ #endif
+ 
+-#if TD_LINUX || TD_ANDROID || TD_TIZEN
++#if TD_LINUX || TD_ANDROID || TD_TIZEN || TD_OHOS
+   #define TD_POLL_EPOLL 1
+   #define TD_EVENTFD_LINUX 1
+ #elif TD_FREEBSD || TD_OPENBSD || TD_NETBSD
+diff --git a/tdutils/td/utils/port/platform.h b/tdutils/td/utils/port/platform.h
+index d6ee70a5d..3208c1a0b 100644
+--- a/tdutils/td/utils/port/platform.h
++++ b/tdutils/td/utils/port/platform.h
+@@ -41,6 +41,8 @@
+   #define TD_DARWIN 1
+ #elif defined(ANDROID) || defined(__ANDROID__)
+   #define TD_ANDROID 1
++#elif defined(__OHOS__)
++  #define TD_OHOS 1
+ #elif defined(TIZEN_DEPRECATION)
+   #define TD_TIZEN 1
+ #elif defined(__linux__)
+diff --git a/tdutils/td/utils/port/uname.cpp b/tdutils/td/utils/port/uname.cpp
+index 97a797a96..6bd2298d3 100644
+--- a/tdutils/td/utils/port/uname.cpp
++++ b/tdutils/td/utils/port/uname.cpp
+@@ -213,6 +213,8 @@ Slice get_operating_system_version() {
+ 
+ #if TD_ANDROID
+     return "Android";
++#elif TD_OHOS
++    return "HarmonyOS";
+ #elif TD_TIZEN
+     return "Tizen";
+ #elif TD_LINUX
